@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcheck-app
+spec:
+  selector:
+    matchLabels:
+      app: healthcheck-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: healthcheck-app
+    spec:
+      containers:
+      - name: healthcheckappcontainer
+        image: "emrekenci/k8s-healthcheck:v1"
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always
+        env:
+          - name:  "USERNAME"
+            value: "admin"
+          - name: "PASSWORD"
+            value: "password"
+          - name: "CACHE_DURATION_IN_SECONDS"
+            value: "30"
+          - name: "NODE_ENV"
+            value: "production"
+          # Use this to exclude some monitors from the result. Must be string deliminated. 
+          # Add the property name as you see in the result json .
+          # Ex: "apiServer,etcd,controllerManager,scheduler,nodes,deployments"
+          - name: "EXCLUDE"
+            value: ""
+          - name: "DEPLOYMENTS_NAMESPACE"
+            value: "default"
